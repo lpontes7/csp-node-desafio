@@ -3,6 +3,9 @@
     "target": "ESNEXT",
     "outDir": "dist",
     "module": "commonjs",
+    "types": [
+      "reflect-metadata"
+    ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noImplicitThis": true,
