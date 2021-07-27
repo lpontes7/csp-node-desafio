@@ -7,7 +7,6 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ContatoEntity } from './contato.entity';
-import { TipoTelefoneEntity } from './tipoTelefone.entity';
 
 
 @Entity('telefone', { schema: 'agenda' })
@@ -18,8 +17,8 @@ export class TelefoneEntity {
     @Column('int', { name: 'contato_id' })
     contatoId: number;
 
-    @Column('int', { name: 'tipo_telefone_id' })
-    tipoTelefoneId: number;
+    @Column('text', { name: 'numero' })
+    numero: string;
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
     createdAt: Date;
@@ -31,15 +30,8 @@ export class TelefoneEntity {
         type => ContatoEntity,
         contato => contato.telefones,
     )
-    @JoinColumn({ name: 'client_id' })
+    @JoinColumn({ name: 'contato_id' })
     contato: ContatoEntity;
-
-    @ManyToOne(
-        type => TipoTelefoneEntity,
-        tipoTelefone => tipoTelefone.telefones,
-    )
-    @JoinColumn({ name: 'tipo_telefone_id' })
-    tipoTelefone: TipoTelefoneEntity;
 
     constructor(partial: Partial<TelefoneEntity>) {
         Object.assign(this, partial);
