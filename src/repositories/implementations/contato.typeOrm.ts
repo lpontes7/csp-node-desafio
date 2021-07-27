@@ -97,11 +97,11 @@ export class ContatoRepository implements IContatoRepository {
     async delete(id: number) {
         return await getManager().transaction(async transactionalEntityManager => {
 
-            const contato = await transactionalEntityManager.find(ContatoEntity, { where: { id: id } })
-            await transactionalEntityManager.delete(ContatoEntity, contato)
-
             const telefonesExcluir = await transactionalEntityManager.find(TelefoneEntity, { where: { contatoId: id } })
             await transactionalEntityManager.delete(TelefoneEntity, telefonesExcluir)
+
+            const contato = await transactionalEntityManager.find(ContatoEntity, { where: { id: id } })
+            await transactionalEntityManager.delete(ContatoEntity, contato)
 
             return "Sucesso"
         })
