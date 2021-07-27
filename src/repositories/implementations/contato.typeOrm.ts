@@ -1,4 +1,4 @@
-import { getManager, getRepository, Like } from "typeorm";
+import { Brackets, getManager, getRepository, Like } from "typeorm";
 import { ContatoEntity } from "../../entitys/contato.entity";
 import { TelefoneEntity } from "../../entitys/telefone.entity";
 import { ICadastroContatoDTO } from "../../useCases/contato/cadastrarContato/cadastrarContato.dto";
@@ -36,18 +36,25 @@ export class ContatoRepository implements IContatoRepository {
 
     async findByFiltro(filtros: IListarContatoDTO) {
         const contatoRespository = getRepository(ContatoEntity)
-            .createQueryBuilder("contato")
+        const dados = await contatoRespository.find({
+            join: {
+                alias: 'contato',
+                leftJoinAndSelect: {
+                    telefones: 'contato.telefones',
+                },
+            },
+            where: new Brackets(qb => {
 
-        if (filtros.email) {
-            contatoRespository.orWhere("contato.email LIKE :email", { email: `%${filtros.email}%` })
-        }
+                if (filtros.email) {
+                    qb.orWhere("contato.email LIKE :email", { email: `%${filtros.email}%` })
+                }
 
-        if (filtros.nome) {
-            contatoRespository.orWhere("contato.primeiroNome LIKE :primeiroNome", { primeiroNome: `%${filtros.nome}%` })
-            contatoRespository.orWhere("contato.ultimoNome LIKE :segundoNome", { segundoNome: `%${filtros.nome}%`})
-        }
-
-        const dados = await contatoRespository.getRawMany();
+                if (filtros.nome) {
+                    qb.orWhere("contato.primeiroNome LIKE :primeiroNome", { primeiroNome: `%${filtros.nome}%` })
+                    qb.orWhere("contato.ultimoNome LIKE :segundoNome", { segundoNome: `%${filtros.nome}%` })
+                }
+            })
+        })
 
         return dados
     }

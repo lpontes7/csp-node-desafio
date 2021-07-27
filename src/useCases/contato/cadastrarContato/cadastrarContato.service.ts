@@ -1,10 +1,12 @@
 import { IContatoRepository } from "../../../repositories/interface/IContato.respository"
+import { ValidadorEmailAdapter } from "../../../utils/validadorEmail"
 import { ICadastroContatoDTO } from "./cadastrarContato.dto"
 
 export class CadastrarContatoService {
 
     constructor(
         private contatoRespository: IContatoRepository,
+        private validadorEmail: ValidadorEmailAdapter
     ) { }
 
     async execute(data: ICadastroContatoDTO): Promise<number> {
@@ -20,7 +22,9 @@ export class CadastrarContatoService {
         if (!data.email){
             throw new Error("email não informado")
         }else {
-            //validar email 
+            if (!this.validadorEmail.validateEmail(data.email)){
+                throw new Error("email invalido") 
+            }
         }
 
         if (data.telefones.length<0){

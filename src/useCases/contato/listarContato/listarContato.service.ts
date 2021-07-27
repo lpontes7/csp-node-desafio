@@ -13,6 +13,5 @@ export class ListarContatoService {
 
         return await this.contatoRespository.findByFiltro(filtros)
 
-
     }
 }
