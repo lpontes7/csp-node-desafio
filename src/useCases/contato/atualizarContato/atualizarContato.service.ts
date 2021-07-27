@@ -39,7 +39,9 @@ export class AtualizarContatoService {
             }
         }
 
-        if (data.telefones.length<0){
+        if (!data.telefones){
+            throw new Error("nenhum telefone informado")
+        }else if (data.telefones.length<0){
             throw new Error("nenhum telefone informado")
         }
 
